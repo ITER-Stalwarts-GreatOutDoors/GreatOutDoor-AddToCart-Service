@@ -11,8 +11,10 @@ import org.springframework.web.client.RestTemplate;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.OrderException;
+import com.cg.iter.greatoutdooraddtocart.repository.CartRepository;
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
 
+//localhost:8150
 @RestController
 @RequestMapping("/cart")
 public class OrderController {
@@ -22,11 +24,12 @@ public class OrderController {
 	@Autowired
 	OrderAndCartService orderAndCartService;
 	
+	
+	
 	@PostMapping("/addItemToCart")
-	@SuppressWarnings("finally")
 	public String addItemToCart(@RequestBody CartDTO cartItem) {
 		
-		String status = "Item add to the cart!";
+		String status = "Item add successfully!";
 		try {
 			
 			orderAndCartService.addItemToCart(cartItem);
@@ -36,13 +39,13 @@ public class OrderController {
 			e.printStackTrace();
 			status = e.getMessage();
 		}
-		finally {
-			return status;
-		}
+
+		return status;
+		
 		
 	}
 	
-	@SuppressWarnings("finally")
+
 	@PostMapping("/placeOrder")
 	public String placeOrder(@RequestParam String userId, @RequestParam String addressId) {
 		
@@ -60,9 +63,27 @@ public class OrderController {
 			status = e.getMessage();
 			
 		}
-		finally {
-			return status;
-		}
+
+		return status;
+	
+	}
+	
+	
+	@PostMapping("/removeOrder")
+	public String removeItemFromCart(@RequestBody CartDTO cartItem) {
+		
+		String status = "Item removed successfully!";
+	
+			try {
+				orderAndCartService.removeItemFromCart(cartItem);
+			} catch (OrderException e) {
+				e.printStackTrace();
+				status = e.getMessage();
+			}
+	
+	
+		return status;
+		
 	}
 
 }

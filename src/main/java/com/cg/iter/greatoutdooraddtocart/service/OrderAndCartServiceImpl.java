@@ -35,10 +35,21 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	@Override
 	public boolean addItemToCart(CartDTO cartItem) throws OrderException {
 		
+		String orderId = "";
+		if(orderRepository.count()==0) {
+			orderId = "ORD0";
+		}
+		else {
+			orderId = "ORD"+orderRepository.count();
+		}
+		
+		OrderProductMapDTO orderProductMap = new OrderProductMapDTO("UIN"+orderProductMapRepository.count(),
+				orderId, cartItem.getProductId(), 1, 0);
 		
 		try {
-			
+	
 			cartRepository.save(cartItem);
+			
 			
 		} catch (RecoverableDataAccessException  e) {
 			
@@ -52,7 +63,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			throw new OrderException("database timeout! exception!");
 		}
 		
-		return true;
+		return true && insertOrderProductMapEntity(orderProductMap);
 	}
 
 	@Override
@@ -83,10 +94,23 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	@Override
 	public boolean removeItemFromCart(CartDTO cartItem) throws OrderException {
 		
+		String orderId = "";
+		if(orderRepository.count()==0) {
+			orderId = "ORD0";
+		}
+		else {
+			orderId = "ORD"+orderRepository.count();
+		}
+		
+		OrderProductMapDTO orderProduct = new OrderProductMapDTO();
+		orderProduct.setOrderId(orderId);
+		orderProduct.setProductId(cartItem.getProductId());
 		
 		try {
 			
+			
 			cartRepository.delete(cartItem);
+			 
 			
 		} catch (RecoverableDataAccessException  e) {
 			
@@ -103,7 +127,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		}
 		
 		
-		return true;
+		return true && deleteOrderProductMapEntity(orderProduct);
 	}
 
 	@Override
@@ -168,8 +192,10 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 
 	@Override
 	public boolean deleteOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) {
-		orderProductMapRepository.delete(orderProductMapEntity);
+		orderProductMapRepository.deleteOrders(orderProductMapEntity.getOrderId(), orderProductMapEntity.getProductId());
 		return true;
 	}
+
+
 
 }

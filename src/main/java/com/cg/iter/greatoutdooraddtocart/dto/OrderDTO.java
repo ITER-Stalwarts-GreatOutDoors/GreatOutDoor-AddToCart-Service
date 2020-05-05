@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "order")
+@Table(name = "order_table")
 public class OrderDTO {
 
 	@Id
