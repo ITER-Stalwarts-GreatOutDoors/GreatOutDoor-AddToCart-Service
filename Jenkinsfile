@@ -8,7 +8,7 @@ pipeline {
 	
 		stage ('Sonarqube deployment Stage'){
 			steps{
-				bat 'mvn sonar:sonar'	
+				bat 'mvn clean sonar:sonar'	
 			}	
 		}
 		
