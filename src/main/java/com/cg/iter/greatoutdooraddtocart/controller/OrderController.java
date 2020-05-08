@@ -69,7 +69,7 @@ public class OrderController {
 	}
 	
 	
-	@PostMapping("/removeOrder")
+	@PostMapping("/removeFromCart")
 	public String removeItemFromCart(@RequestBody CartDTO cartItem) {
 		
 		String status = "Item removed successfully!";
