@@ -1,5 +1,8 @@
 package com.cg.iter.greatoutdooraddtocart.service;
 
+
+
+import com.cg.iter.greatoutdooraddtocart.beans.Orders;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
@@ -48,5 +51,21 @@ public interface OrderAndCartService {
 	 */
 	boolean deleteOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity);
 	
+	boolean deleteOrder(OrderDTO order);
+
+
+	void cancelOrder(String orderId);
+
+
+	Orders getAllOrdersWithOrderId(String orderId);
+
+
+	Orders getAllOrdersWithOrderIdProductId(String orderId, String productId);
+
+
+	void cancelProduct(String orderId, String productId);
 	
+	long getOrderTableSize();
+	
+	long getOrderProductMapTableSize();
 }

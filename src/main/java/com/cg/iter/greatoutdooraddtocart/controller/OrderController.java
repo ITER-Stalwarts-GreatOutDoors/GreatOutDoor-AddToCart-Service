@@ -19,8 +19,8 @@ import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
 @RequestMapping("/cart")
 public class OrderController {
 	
-	@Autowired
-	RestTemplate restTemplate;
+	//to do -scan add to cart and then fill order-product map and order
+	
 	@Autowired
 	OrderAndCartService orderAndCartService;
 	
@@ -85,5 +85,7 @@ public class OrderController {
 		return status;
 		
 	}
+	
+	
 
 }
