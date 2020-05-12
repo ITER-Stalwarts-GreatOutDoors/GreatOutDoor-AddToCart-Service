@@ -6,7 +6,8 @@ import com.cg.iter.greatoutdooraddtocart.beans.Orders;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
-import com.cg.iter.greatoutdooraddtocart.exception.OrderException;
+import com.cg.iter.greatoutdooraddtocart.exception.OrderNotFoundException;
+
 
 public interface OrderAndCartService {
 
@@ -16,7 +17,7 @@ public interface OrderAndCartService {
 	 * name - add to cart
 	 * description - It will add an item to the cart.
 	 */
-	boolean addItemToCart(CartDTO cartItem) throws OrderException;
+	boolean addItemToCart(CartDTO cartItem) throws Exception;
 	
 	
 
@@ -24,7 +25,7 @@ public interface OrderAndCartService {
 	 * name - insert order-product map entity
 	 * description - register an item against a particular order
 	 */
-	boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws OrderException;
+	boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws Exception;
 	
 	
 
@@ -32,7 +33,7 @@ public interface OrderAndCartService {
 	 * name - remove item from the cart
 	 * description - it will remove available item from the cart
 	 */
-	boolean removeItemFromCart(CartDTO cartItem) throws OrderException;
+	boolean removeItemFromCart(CartDTO cartItem) throws Exception;
 	
 
 	
@@ -40,7 +41,7 @@ public interface OrderAndCartService {
 	 * name - updateItemQuantity
 	 * description - update the amount of existing product
 	 */
-	boolean updateItemQuantity(CartDTO cartItem) throws OrderException;
+	boolean updateItemQuantity(CartDTO cartItem) throws Exception;
 	
 	
 
@@ -48,7 +49,7 @@ public interface OrderAndCartService {
 	 * name - registerOrder
 	 * description - register a new order
 	 */
-	boolean registerOrder(OrderDTO order) throws OrderException;
+	boolean registerOrder(OrderDTO order) throws Exception;
 	
 	
 
@@ -80,7 +81,7 @@ public interface OrderAndCartService {
 	 * name-getAllOrdersWithOrderId
 	 * description:Accesing all the orders with a given order id
 	 */ 
-	Orders getAllOrdersWithOrderId(String orderId);
+	Orders getAllOrdersWithOrderId(String orderId) throws OrderNotFoundException;
 
 
 
@@ -90,9 +91,7 @@ public interface OrderAndCartService {
 	 * description:Accesing all the orders with a given orderId and productId
 	 */
 
-	Orders getAllOrdersWithOrderIdProductId(String orderId, String productId);
-
-
+	Orders getAllOrdersWithOrderIdProductId(String orderId, String productId) throws OrderNotFoundException;
 
     /*
      * name-cancelProduct

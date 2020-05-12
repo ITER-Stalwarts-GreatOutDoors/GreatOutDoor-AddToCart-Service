@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
-import com.cg.iter.greatoutdooraddtocart.exception.OrderException;
+import com.cg.iter.greatoutdooraddtocart.exception.NullParameterException;
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
 import org.apache.log4j.Logger;
 
-//localhost:8150
+
 @RestController
 @RequestMapping("/cart")
 public class OrderController {
@@ -24,47 +24,36 @@ public class OrderController {
 	OrderAndCartService orderAndCartService;
 	
 	
-	
 	@PostMapping("/addItemToCart")
-	public String addItemToCart(@RequestBody CartDTO cartItem) {
+	public String addItemToCart(@RequestBody CartDTO cartItem) throws Exception {
 		
-		String status = "Item add successfully!";
-		try {
-			
-			orderAndCartService.addItemToCart(cartItem);
-			
-		} catch (OrderException e) {
-			
-			logger.error(e.getMessage());
-			logger.error(e.getStackTrace().toString());
-			status = e.getMessage();
+		if(cartItem==null) { 
+			logger.error("Null request cart details not provided at /addItemToCart");
+			throw new NullParameterException("Null request, please provide cart details!");
 		}
-
+		
+		String status = "Item add successfully!";	
+		orderAndCartService.addItemToCart(cartItem);
+			
 		return status;
 		
 		
 	}
 	
-
 	@PostMapping("/placeOrder")
-	public String placeOrder(@RequestParam String userId, @RequestParam String addressId) {
+	public String placeOrder(@RequestParam String userId, @RequestParam String addressId) throws Exception {
+		
+		if(userId==null || addressId==null) {
+			logger.error("Null request, userId or addressId not provided at /placeOrder");
+			throw new NullParameterException("Null request, please provide userId or addressId!");
+		}
 		
 		String status = "Order placed successfully";
 		OrderDTO order = new OrderDTO();
 		order.setAddressId(addressId);
 		order.setUserId(userId);
-		
-		try {
-			orderAndCartService.registerOrder(order);
-			
-		} catch (OrderException e) {
-			
-			logger.error(e.getMessage());
-			logger.error(e.getStackTrace().toString());
+		orderAndCartService.registerOrder(order);
 
-			status = e.getMessage();
-			
-		}
 
 		return status;
 	
@@ -72,23 +61,16 @@ public class OrderController {
 	
 	
 	@PostMapping("/removeFromCart")
-	public String removeItemFromCart(@RequestBody CartDTO cartItem) {
+	public String removeItemFromCart(@RequestBody CartDTO cartItem) throws Exception {
 		
-		String status = "Item removed successfully!";
-	
-			try {
-				
-				orderAndCartService.removeItemFromCart(cartItem);
-				
-			} catch (OrderException e) {
-				
-				logger.error(e.getMessage());
-				logger.error(e.getStackTrace().toString());
-
-				status = e.getMessage();
-			}
-	
-	
+		
+		if(cartItem==null) { 
+			logger.error("Null request, cart details are not provided at /removeFromCart");
+			throw new NullParameterException("Null request, please provide cart details to remove iteam from cart!");
+		}
+		
+		String status = "Item removed successfully!";		
+		orderAndCartService.removeItemFromCart(cartItem);
 		return status;
 		
 	}

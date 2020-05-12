@@ -17,7 +17,7 @@ import com.cg.iter.greatoutdooraddtocart.beans.Orders;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
-import com.cg.iter.greatoutdooraddtocart.exception.OrderException;
+import com.cg.iter.greatoutdooraddtocart.exception.OrderNotFoundException;
 import com.cg.iter.greatoutdooraddtocart.repository.CartRepository;
 import com.cg.iter.greatoutdooraddtocart.repository.OrderProductMapRepository;
 import com.cg.iter.greatoutdooraddtocart.repository.OrderRepository;
@@ -39,7 +39,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	GenerateID generate;
 	
 	@Override
-	public boolean addItemToCart(CartDTO cartItem) throws OrderException {
+	public boolean addItemToCart(CartDTO cartItem) throws Exception {
 		
 		
 		
@@ -50,21 +50,21 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new OrderException("distributed transaction exception!");
+			throw new Exception("distributed transaction exception!");
 		} catch (ScriptException  e) {
 			
-			throw new OrderException("Not well-formed script or error SQL command exception!");
+			throw new Exception("Not well-formed script or error SQL command exception!");
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new OrderException("database timeout! exception!");
+			throw new Exception("database timeout! exception!");
 		}
 		
 		return true;
 	}
 
 	@Override
-	public boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws OrderException {
+	public boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws Exception {
 		
 		try {
 			
@@ -72,15 +72,15 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new OrderException("distributed transaction exception!");
+			throw new Exception("distributed transaction exception!");
 			
 		} catch (ScriptException  e) {
 			
-			throw new OrderException("Not well-formed script or error SQL command exception!");
+			throw new Exception("Not well-formed script or error SQL command exception!");
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new OrderException("database timeout! exception!");
+			throw new Exception("database timeout! exception!");
 			
 		}
 		
@@ -89,7 +89,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 	@Override
-	public boolean removeItemFromCart(CartDTO cartItem) throws OrderException {
+	public boolean removeItemFromCart(CartDTO cartItem) throws Exception {
 		
 		try {
 			
@@ -98,15 +98,15 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new OrderException("distributed transaction exception!");
+			throw new Exception("distributed transaction exception!");
 			
 		} catch (ScriptException  e) {
 			
-			throw new OrderException("Not well-formed script or error SQL command exception!");
+			throw new Exception("Not well-formed script or error SQL command exception!");
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new OrderException("database timeout! exception!");
+			throw new Exception("database timeout! exception!");
 			
 		}
 		
@@ -115,7 +115,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 	@Override
-	public boolean updateItemQuantity(CartDTO cartItem) throws OrderException {
+	public boolean updateItemQuantity(CartDTO cartItem) throws Exception {
 		
 		Optional<CartDTO> checkItem = cartRepository.findById(cartItem.getUserId());
 		
@@ -127,26 +127,26 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new OrderException("distributed transaction exception!");
+			throw new Exception("distributed transaction exception!");
 			
 		} catch (ScriptException  e) {
 			
-			throw new OrderException("Not well-formed script or error SQL command exception!");
+			throw new Exception("Not well-formed script or error SQL command exception!");
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new OrderException("database timeout! exception!");
+			throw new Exception("database timeout! exception!");
 			
 		} catch (Exception e) {
 			
-			throw new OrderException("Item not present in the cart!");
+			throw new Exception("Item not present in the cart!");
 		}
 		
 		return true;
 	}
 
 	@Override
-	public boolean registerOrder(OrderDTO order) throws OrderException {
+	public boolean registerOrder(OrderDTO order) throws Exception {
 		
 		////////////////////////////////////////////////
 		
@@ -182,15 +182,15 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new OrderException("distributed transaction exception!");
+			throw new Exception("distributed transaction exception!");
 			
 		} catch (ScriptException  e) {
 			
-			throw new OrderException("Not well-formed script or error SQL command exception!");
+			throw new Exception("Not well-formed script or error SQL command exception!");
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new OrderException("database timeout! exception!");
+			throw new Exception("database timeout! exception!");
 			
 		}
 		
@@ -215,24 +215,26 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		orderRepository.deleteById(orderId);
 	}
 
-	@SuppressWarnings("unused")
+
 	@Override
 	public Orders getAllOrdersWithOrderId(String orderId) {
 		Orders orders = new Orders();
 		orders.setOrders(orderProductMapRepository.getAllOrdersById(orderId));
-		if(orders==null) {
-			logger.error("No orders with this orderId!", new OrderException("No orders with this orderId!"));
+		if(orders.getOrders().isEmpty()) {
+			logger.error("No orders with this orderId!");
+			throw new OrderNotFoundException("No orders with orderId "+orderId+" is available!");
 		}
 		return orders;
 	}
 
-	@SuppressWarnings("unused")
+
 	@Override
 	public Orders getAllOrdersWithOrderIdProductId(String orderId, String productId) {
 		Orders orders = new Orders();
 		orders.setOrders(orderProductMapRepository.getAllOrdersByOrderIdProductId(orderId,productId));
-		if(orders==null) {
-			logger.error("No orders with this orderId!", new OrderException("No orders with this orderId!"));
+		if(orders.getOrders().isEmpty()) {
+			logger.error("No orders with this orderId is available!");
+			throw new OrderNotFoundException("No orders with orderId "+orderId+" and productId "+productId+" is available");
 		}
 		return orders;
 	}
