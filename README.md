@@ -11,18 +11,23 @@ In an e-commerce site, a retailer or a customer chooses different products to pl
 User must be logged in as retailer to perform the add item to cart functionality. He/she has to give his/her correct credential to add the item into the cart. 
 
 ### Implemented By: 
-##### Sachiket Behera
+#### Sachiket Behera
 
 
-#### Use Case Diagram 
+### Use Case Diagram 
 ![](documents/Use_Case_Diagram-AddToCart.png)
 
-#### Sequence Diagram 
+### Sequence Diagram 
 ![](documents/Sequence_Diagram-Order.png)
 
-#### Sequence Diagram 
+### ER Diagram 
 ![](documents/ER_Diagram-AddToCart.png)
 
+### Application info :
+You can change this properties in resource/application.properties
+* Port - 8150
+* Application name - add-to-cart-service
+* Database - for devlopment [H2](https://www.h2database.com/) and for production [Oracle](https://www.oracle.com/). 
 
 ## Getting Started
 
