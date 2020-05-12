@@ -6,21 +6,21 @@ import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
 
 public class Orders {
 
-	private List<OrderProductMapDTO> orders;
+	private List<OrderProductMapDTO> orderList;
 
 	public Orders() {}
 
-	public Orders(List<OrderProductMapDTO> orders) {
+	public Orders(List<OrderProductMapDTO> orderList) {
 		super();
-		this.orders = orders;
+		this.orderList = orderList;
 	}
 
 	public List<OrderProductMapDTO> getOrders() {
-		return orders;
+		return orderList;
 	}
 
-	public void setOrders(List<OrderProductMapDTO> orders) {
-		this.orders = orders;
+	public void setOrders(List<OrderProductMapDTO> orderList) {
+		this.orderList = orderList;
 	}
 	
 }

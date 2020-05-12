@@ -11,13 +11,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
 
 	private long currentTimeMillis = System.currentTimeMillis();
+	private String errorMsg = "Some thing went wrong!";
 	
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ErrorMessage> somethingWentWrong(Exception ex){
 		
 		ErrorMessage exceptionResponse =
 				new ErrorMessage(ex.getMessage(), 
-						"Some thing went wrong!",currentTimeMillis);
+						errorMsg,currentTimeMillis);
 		return new ResponseEntity<ErrorMessage>(exceptionResponse,
 				new HttpHeaders(),HttpStatus.BAD_REQUEST);
 		
@@ -28,7 +29,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
 
 		ErrorMessage exceptionResponse =
 				new ErrorMessage(ex.getMessage(), 
-						"Some thing went wrong!",currentTimeMillis);
+						errorMsg,currentTimeMillis);
 		return new ResponseEntity<ErrorMessage>(exceptionResponse,
 				new HttpHeaders(),HttpStatus.NOT_FOUND);
 	}
@@ -39,7 +40,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
 
 		ErrorMessage exceptionResponse =
 				new ErrorMessage(ex.getMessage(), 
-						"Some thing went wrong!",currentTimeMillis);
+						errorMsg,currentTimeMillis);
 		return new ResponseEntity<ErrorMessage>(exceptionResponse,
 				new HttpHeaders(),HttpStatus.NOT_FOUND);
 	}

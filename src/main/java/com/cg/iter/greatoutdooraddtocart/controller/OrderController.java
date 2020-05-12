@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.NullParameterException;
@@ -25,15 +26,15 @@ public class OrderController {
 	
 	
 	@PostMapping("/addItemToCart")
-	public String addItemToCart(@RequestBody CartDTO cartItem) throws Exception {
+	public String addItemToCart(@RequestBody ResponseCartDTO cartDTO) {
 		
-		if(cartItem==null) { 
-			logger.error("Null request cart details not provided at /addItemToCart");
+		if(cartDTO==null || cartDTO.getProductId()==null || cartDTO.getQuantity()==0 || cartDTO.getUserId()==null) { 
+			logger.error("Null request, cart details not provided at /addItemToCart");
 			throw new NullParameterException("Null request, please provide cart details!");
 		}
 		
 		String status = "Item add successfully!";	
-		orderAndCartService.addItemToCart(cartItem);
+		orderAndCartService.addItemToCart(cartDTO);
 			
 		return status;
 		
@@ -41,11 +42,11 @@ public class OrderController {
 	}
 	
 	@PostMapping("/placeOrder")
-	public String placeOrder(@RequestParam String userId, @RequestParam String addressId) throws Exception {
+	public String placeOrder(@RequestParam String userId, @RequestParam String addressId) {
 		
 		if(userId==null || addressId==null) {
 			logger.error("Null request, userId or addressId not provided at /placeOrder");
-			throw new NullParameterException("Null request, please provide userId or addressId!");
+			throw new NullParameterException("Null request, please provide userId and addressId!");
 		}
 		
 		String status = "Order placed successfully";
@@ -61,16 +62,16 @@ public class OrderController {
 	
 	
 	@PostMapping("/removeFromCart")
-	public String removeItemFromCart(@RequestBody CartDTO cartItem) throws Exception {
+	public String removeItemFromCart(@RequestBody ResponseCartDTO cartDTO){
 		
 		
-		if(cartItem==null) { 
+		if(cartDTO==null || cartDTO.getProductId()==null || cartDTO.getQuantity()==0 || cartDTO.getUserId()==null) { 
 			logger.error("Null request, cart details are not provided at /removeFromCart");
 			throw new NullParameterException("Null request, please provide cart details to remove iteam from cart!");
 		}
 		
 		String status = "Item removed successfully!";		
-		orderAndCartService.removeItemFromCart(cartItem);
+		orderAndCartService.removeItemFromCart(cartDTO);
 		return status;
 		
 	}

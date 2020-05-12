@@ -3,6 +3,7 @@ package com.cg.iter.greatoutdooraddtocart.service;
 
 
 import com.cg.iter.greatoutdooraddtocart.beans.Orders;
+import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
@@ -17,7 +18,7 @@ public interface OrderAndCartService {
 	 * name - add to cart
 	 * description - It will add an item to the cart.
 	 */
-	boolean addItemToCart(CartDTO cartItem) throws Exception;
+	boolean addItemToCart(ResponseCartDTO cartItem);
 	
 	
 
@@ -25,7 +26,7 @@ public interface OrderAndCartService {
 	 * name - insert order-product map entity
 	 * description - register an item against a particular order
 	 */
-	boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws Exception;
+	boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity);
 	
 	
 
@@ -33,7 +34,7 @@ public interface OrderAndCartService {
 	 * name - remove item from the cart
 	 * description - it will remove available item from the cart
 	 */
-	boolean removeItemFromCart(CartDTO cartItem) throws Exception;
+	boolean removeItemFromCart(ResponseCartDTO cartItem);
 	
 
 	
@@ -41,7 +42,7 @@ public interface OrderAndCartService {
 	 * name - updateItemQuantity
 	 * description - update the amount of existing product
 	 */
-	boolean updateItemQuantity(CartDTO cartItem) throws Exception;
+	boolean updateItemQuantity(CartDTO cartItem);
 	
 	
 
@@ -49,7 +50,7 @@ public interface OrderAndCartService {
 	 * name - registerOrder
 	 * description - register a new order
 	 */
-	boolean registerOrder(OrderDTO order) throws Exception;
+	boolean registerOrder(OrderDTO order);
 	
 	
 

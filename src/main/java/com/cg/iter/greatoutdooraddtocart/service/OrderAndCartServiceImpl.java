@@ -14,9 +14,11 @@ import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.stereotype.Service;
 
 import com.cg.iter.greatoutdooraddtocart.beans.Orders;
+import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
+import com.cg.iter.greatoutdooraddtocart.exception.CrudException;
 import com.cg.iter.greatoutdooraddtocart.exception.OrderNotFoundException;
 import com.cg.iter.greatoutdooraddtocart.repository.CartRepository;
 import com.cg.iter.greatoutdooraddtocart.repository.OrderProductMapRepository;
@@ -38,33 +40,37 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	@Autowired
 	GenerateID generate;
 	
+	private String dataAccessException = "distributed transaction exception!";
+	private String scriptException = "Not well-formed script or error SQL command exception!";
+	private String transientDataAccessException = "database timeout! exception!";
+	
 	@Override
-	public boolean addItemToCart(CartDTO cartItem) throws Exception {
+	public boolean addItemToCart(ResponseCartDTO cart) {
 		
 		
 		
 		try {
-	
+			CartDTO cartItem = new CartDTO(cart.getUserId(), cart.getProductId(), cart.getQuantity());
 			cartRepository.save(cartItem);
 			
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new Exception("distributed transaction exception!");
+			throw new CrudException(dataAccessException);
 		} catch (ScriptException  e) {
 			
-			throw new Exception("Not well-formed script or error SQL command exception!");
+			throw new CrudException(scriptException);
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new Exception("database timeout! exception!");
+			throw new CrudException(transientDataAccessException);
 		}
 		
 		return true;
 	}
 
 	@Override
-	public boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws Exception {
+	public boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) {
 		
 		try {
 			
@@ -72,15 +78,15 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new Exception("distributed transaction exception!");
+			throw new CrudException(dataAccessException);
 			
 		} catch (ScriptException  e) {
 			
-			throw new Exception("Not well-formed script or error SQL command exception!");
+			throw new CrudException(scriptException);
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new Exception("database timeout! exception!");
+			throw new CrudException(transientDataAccessException);
 			
 		}
 		
@@ -89,24 +95,25 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 	@Override
-	public boolean removeItemFromCart(CartDTO cartItem) throws Exception {
+	public boolean removeItemFromCart(ResponseCartDTO cart) {
+		
 		
 		try {
-			
+			CartDTO cartItem = new CartDTO(cart.getUserId(), cart.getProductId(), cart.getQuantity());
 			cartRepository.delete(cartItem);
 			 
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new Exception("distributed transaction exception!");
+			throw new CrudException(dataAccessException);
 			
 		} catch (ScriptException  e) {
 			
-			throw new Exception("Not well-formed script or error SQL command exception!");
+			throw new CrudException(scriptException);
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new Exception("database timeout! exception!");
+			throw new CrudException(transientDataAccessException);
 			
 		}
 		
@@ -115,7 +122,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 	@Override
-	public boolean updateItemQuantity(CartDTO cartItem) throws Exception {
+	public boolean updateItemQuantity(CartDTO cartItem){
 		
 		Optional<CartDTO> checkItem = cartRepository.findById(cartItem.getUserId());
 		
@@ -127,31 +134,31 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new Exception("distributed transaction exception!");
+			throw new CrudException(dataAccessException);
 			
 		} catch (ScriptException  e) {
 			
-			throw new Exception("Not well-formed script or error SQL command exception!");
+			throw new CrudException(scriptException);
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new Exception("database timeout! exception!");
+			throw new CrudException(transientDataAccessException);
 			
 		} catch (Exception e) {
 			
-			throw new Exception("Item not present in the cart!");
+			throw new CrudException("Item not present in the cart!");
 		}
 		
 		return true;
 	}
 
 	@Override
-	public boolean registerOrder(OrderDTO order) throws Exception {
+	public boolean registerOrder(OrderDTO order){
 		
 		////////////////////////////////////////////////
 		
 		//insert the item from the cart to order product map table
-		
+		if(cartRepository.count()==0) throw new CrudException("Please item add to cart to place an order!");
 		List<CartDTO> cartItems = (List<CartDTO>) cartRepository.findAll();
 		Iterator<CartDTO> itr = cartItems.iterator();
 		int index = 0;
@@ -182,15 +189,15 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 			
 		} catch (RecoverableDataAccessException  e) {
 			
-			throw new Exception("distributed transaction exception!");
+			throw new CrudException(dataAccessException);
 			
 		} catch (ScriptException  e) {
 			
-			throw new Exception("Not well-formed script or error SQL command exception!");
+			throw new CrudException(scriptException);
 			
 		} catch (TransientDataAccessException e) {
 			
-			throw new Exception("database timeout! exception!");
+			throw new CrudException(transientDataAccessException);
 			
 		}
 		
