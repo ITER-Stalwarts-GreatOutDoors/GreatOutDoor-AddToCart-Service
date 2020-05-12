@@ -12,14 +12,11 @@ public class GreatOutDoorAddToCartServiceApplication {
 	@Bean
 	@LoadBalanced
 	public RestTemplate getRestTemplate() {
-//		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-//		clientHttpRequestFactory.setConnectTimeout(3000);
-//		return new RestTemplate(clientHttpRequestFactory);
 		return new RestTemplate();
 	}
 	
 	public static void main(String[] args) {
-		SpringApplication.run(GreatOutDoorAddToCartServiceApplication.class, args);
+		SpringApplication.run(GreatOutDoorAddToCartServiceApplication.class,args);
 	}
 
 }

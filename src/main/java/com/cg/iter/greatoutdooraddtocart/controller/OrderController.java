@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
-import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.NullParameterException;
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;

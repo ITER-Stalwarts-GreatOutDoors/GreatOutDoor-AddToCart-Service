@@ -1,5 +1,6 @@
 package com.cg.iter.greatoutdooraddtocart.exception;
 
+@SuppressWarnings("serial")
 public class OrderNotFoundException extends RuntimeException{
 
 	public OrderNotFoundException(String message) {
