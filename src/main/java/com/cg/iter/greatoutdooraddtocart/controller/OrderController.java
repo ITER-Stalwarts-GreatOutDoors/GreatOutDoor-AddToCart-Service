@@ -6,20 +6,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.OrderException;
-import com.cg.iter.greatoutdooraddtocart.repository.CartRepository;
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
+import org.apache.log4j.Logger;
 
 //localhost:8150
 @RestController
 @RequestMapping("/cart")
 public class OrderController {
 	
-	//to do -scan add to cart and then fill order-product map and order
+	private static final Logger logger = Logger.getLogger(OrderController.class);
 	
 	@Autowired
 	OrderAndCartService orderAndCartService;
@@ -36,7 +35,8 @@ public class OrderController {
 			
 		} catch (OrderException e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			logger.error(e.getStackTrace().toString());
 			status = e.getMessage();
 		}
 
@@ -59,7 +59,9 @@ public class OrderController {
 			
 		} catch (OrderException e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			logger.error(e.getStackTrace().toString());
+
 			status = e.getMessage();
 			
 		}
@@ -75,9 +77,14 @@ public class OrderController {
 		String status = "Item removed successfully!";
 	
 			try {
+				
 				orderAndCartService.removeItemFromCart(cartItem);
+				
 			} catch (OrderException e) {
-				e.printStackTrace();
+				
+				logger.error(e.getMessage());
+				logger.error(e.getStackTrace().toString());
+
 				status = e.getMessage();
 			}
 	

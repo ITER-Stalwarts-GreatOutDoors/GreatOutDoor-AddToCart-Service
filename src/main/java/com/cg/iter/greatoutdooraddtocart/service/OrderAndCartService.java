@@ -10,6 +10,8 @@ import com.cg.iter.greatoutdooraddtocart.exception.OrderException;
 
 public interface OrderAndCartService {
 
+
+	
 	/*
 	 * name - add to cart
 	 * description - It will add an item to the cart.
@@ -17,6 +19,7 @@ public interface OrderAndCartService {
 	boolean addItemToCart(CartDTO cartItem) throws OrderException;
 	
 	
+
 	/*
 	 * name - insert order-product map entity
 	 * description - register an item against a particular order
@@ -24,12 +27,14 @@ public interface OrderAndCartService {
 	boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) throws OrderException;
 	
 	
+
 	/*
 	 * name - remove item from the cart
 	 * description - it will remove available item from the cart
 	 */
 	boolean removeItemFromCart(CartDTO cartItem) throws OrderException;
 	
+
 	
 	/*
 	 * name - updateItemQuantity
@@ -38,6 +43,7 @@ public interface OrderAndCartService {
 	boolean updateItemQuantity(CartDTO cartItem) throws OrderException;
 	
 	
+
 	/*
 	 * name - registerOrder
 	 * description - register a new order
@@ -45,24 +51,53 @@ public interface OrderAndCartService {
 	boolean registerOrder(OrderDTO order) throws OrderException;
 	
 	
+
 	/*
 	 * name - delete order-product map entity
 	 * description - delete an item against a particular order
 	 */
 	boolean deleteOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity);
 	
+
+	
+	/*
+	 * name-deleteOrder
+	 * description:delete the order
+	 */
 	boolean deleteOrder(OrderDTO order);
 
 
+	
+     /*
+      * name-cancelOrder
+      * description: Cancel a order that is placed
+      */
 	void cancelOrder(String orderId);
 
 
+	
+	/*
+	 * name-getAllOrdersWithOrderId
+	 * description:Accesing all the orders with a given order id
+	 */ 
 	Orders getAllOrdersWithOrderId(String orderId);
 
+
+
+	
+	/*
+	 * name:getAllOrderWithOrderIdProductId
+	 * description:Accesing all the orders with a given orderId and productId
+	 */
 
 	Orders getAllOrdersWithOrderIdProductId(String orderId, String productId);
 
 
+
+    /*
+     * name-cancelProduct
+     * description:cancel a product of particular order that is placed
+     */
 	void cancelProduct(String orderId, String productId);
 	
 	long getOrderTableSize();

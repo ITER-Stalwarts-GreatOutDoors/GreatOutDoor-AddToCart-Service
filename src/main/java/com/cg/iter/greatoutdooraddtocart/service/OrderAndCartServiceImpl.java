@@ -1,11 +1,12 @@
 package com.cg.iter.greatoutdooraddtocart.service;
 
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.dao.TransientDataAccessException;
@@ -26,7 +27,7 @@ import com.cg.iter.greatoutdooraddtocart.util.GenerateID;
 @Service
 public class OrderAndCartServiceImpl implements OrderAndCartService{
 
-	//private Logger logger = Logger.getLogger(OrderAndCartServiceImpl.class);
+	private Logger logger = Logger.getLogger(OrderAndCartServiceImpl.class);
 	
 	@Autowired
 	CartRepository cartRepository;
@@ -34,8 +35,9 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	OrderProductMapRepository orderProductMapRepository;
 	@Autowired
 	OrderRepository orderRepository;
-	
+	@Autowired
 	GenerateID generate;
+	
 	@Override
 	public boolean addItemToCart(CartDTO cartItem) throws OrderException {
 		
@@ -168,7 +170,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		
 		
 		long millis = System.currentTimeMillis();
-		java.sql.Date orderInitiationTime = new java.sql.Date(millis);
+		Date orderInitiationTime = new Date(millis);
 		
 		OrderDTO newOrder = new OrderDTO(generate.generateOrderId(),order.getUserId()
 				,order.getAddressId(),(byte) 0,orderInitiationTime,null );
@@ -213,17 +215,25 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		orderRepository.deleteById(orderId);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Orders getAllOrdersWithOrderId(String orderId) {
 		Orders orders = new Orders();
 		orders.setOrders(orderProductMapRepository.getAllOrdersById(orderId));
+		if(orders==null) {
+			logger.error("No orders with this orderId!", new OrderException("No orders with this orderId!"));
+		}
 		return orders;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Orders getAllOrdersWithOrderIdProductId(String orderId, String productId) {
 		Orders orders = new Orders();
 		orders.setOrders(orderProductMapRepository.getAllOrdersByOrderIdProductId(orderId,productId));
+		if(orders==null) {
+			logger.error("No orders with this orderId!", new OrderException("No orders with this orderId!"));
+		}
 		return orders;
 	}
 

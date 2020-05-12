@@ -1,11 +1,12 @@
 package com.cg.iter.greatoutdooraddtocart.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
 
 
-
+@Component
 public class GenerateID {
 
 	@Autowired
