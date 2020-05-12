@@ -9,6 +9,7 @@ In an e-commerce site, a retailer or a customer chooses different products to pl
 
 ### Prerequisite 
 User must be logged in as retailer to perform the add item to cart functionality. He/she has to give his/her correct credential to add the item into the cart. 
+Eureka discovery server should be running on your machine.
 
 ### Implemented By: 
 #### Sachiket Behera
