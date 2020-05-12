@@ -1,2 +1,4 @@
 # GreatOutDoor-AddToCart-Service
-This is a GreatOutDoor add to cart service
+
+A new spring add to cart rest service for Great OutDoors project.
+![](spring.png)
