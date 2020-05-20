@@ -2,11 +2,14 @@ package com.cg.iter.greatoutdooraddtocart.service;
 
 
 
+import java.util.List;
+
 import com.cg.iter.greatoutdooraddtocart.beans.Orders;
 import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
+import com.cg.iter.greatoutdooraddtocart.dto.ProductDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.OrderNotFoundException;
 
 
@@ -103,4 +106,19 @@ public interface OrderAndCartService {
 	long getOrderTableSize();
 	
 	long getOrderProductMapTableSize();
+
+
+
+	 /*
+     * getProductsFromCart
+     * description:retailer can get all products in the cart
+     */
+	List<ProductDTO> getProductsFromCart();
+
+
+	/*
+     * removeItemFromCart
+     * description:retailer can remove a product in the cart
+     */
+	void removeItemFromCart(String userId, String productId);
 }

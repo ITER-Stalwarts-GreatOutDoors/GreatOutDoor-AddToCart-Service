@@ -1,6 +1,8 @@
 package com.cg.iter.greatoutdooraddtocart.service;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,18 +14,23 @@ import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.dao.TransientDataAccessException;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.cg.iter.greatoutdooraddtocart.beans.Orders;
 import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderProductMapDTO;
+import com.cg.iter.greatoutdooraddtocart.dto.ProductDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.CrudException;
 import com.cg.iter.greatoutdooraddtocart.exception.OrderNotFoundException;
 import com.cg.iter.greatoutdooraddtocart.repository.CartRepository;
 import com.cg.iter.greatoutdooraddtocart.repository.OrderProductMapRepository;
 import com.cg.iter.greatoutdooraddtocart.repository.OrderRepository;
 import com.cg.iter.greatoutdooraddtocart.util.GenerateID;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
 
 
 @Service
@@ -39,7 +46,10 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	OrderRepository orderRepository;
 	@Autowired
 	GenerateID generate;
+	@Autowired
+	RestTemplate restTemplate;
 	
+	private String productURL = "http://product-ms/product";
 	private String dataAccessException = "distributed transaction exception!";
 	private String scriptException = "Not well-formed script or error SQL command exception!";
 	private String transientDataAccessException = "database timeout! exception!";
@@ -162,11 +172,12 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		List<CartDTO> cartItems = (List<CartDTO>) cartRepository.findAll();
 		Iterator<CartDTO> itr = cartItems.iterator();
 		int index = 0;
+		String orderId = generate.generateOrderId(order.getUserId());
 		
 		while (itr.hasNext()) {
 			
 			OrderProductMapDTO orderProductMap = new OrderProductMapDTO(generate.generateProductUIN(),
-			generate.generateOrderId(), cartItems.get(index).getProductId(), 1, 0);
+			orderId, cartItems.get(index).getProductId(), 1, 0);
 			insertOrderProductMapEntity(orderProductMap);
 			index++;
 			itr.next();
@@ -179,7 +190,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		long millis = System.currentTimeMillis();
 		Date orderInitiationTime = new Date(millis);
 		
-		OrderDTO newOrder = new OrderDTO(generate.generateOrderId(),order.getUserId()
+		OrderDTO newOrder = new OrderDTO(orderId,order.getUserId()
 				,order.getAddressId(),(byte) 0,orderInitiationTime,null );
 		
 		
@@ -261,6 +272,47 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return orderProductMapRepository.count();
 	}
 
+	
+	@HystrixCommand(fallbackMethod = "getFallbackProducts",
+			commandProperties = {
+					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+			})
+	@Override
+	public List<ProductDTO> getProductsFromCart() {
+		List<CartDTO> listCartItems = (List<CartDTO>) cartRepository.findAll();
+		List<ProductDTO> listProducts = new ArrayList<>();
+		
+		Iterator<CartDTO> itr = listCartItems.iterator();
+		int index = 0;
+		
+		while (itr.hasNext()) {
+			ProductDTO product = restTemplate.getForObject(productURL+"/getProductById?productId="+listCartItems.get(index).getProductId(),
+					ProductDTO.class);
+			product.setQuantity(listCartItems.get(index).getQuantity());
+			listProducts.add(product);
+			index++;
+			itr.next();
+		}
+		return listProducts;
+	}
 
+	@Override
+	public void removeItemFromCart(String userId, String productId) {
+		cartRepository.removeItemFromCart(userId, productId);
+		
+	}
+
+	
+	//fallback method
+	public List<ProductDTO>getFallbackProducts(){
+		return Arrays.asList(
+				new ProductDTO("fallback productId", 
+						00,"fallback colour","fallback dimension", "fallback specification","fallback manufacture", 0,0 ,"fallback productName", "fallback.com/fallback.jpg")
+				
+				);
+	}
 
 }

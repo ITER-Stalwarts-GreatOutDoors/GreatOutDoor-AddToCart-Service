@@ -1,5 +1,8 @@
 package com.cg.iter.greatoutdooraddtocart.util;
 
+import java.util.Date;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,18 +15,17 @@ public class GenerateID {
 	@Autowired
 	OrderAndCartService service;
 	
-	public String generateOrderId() {
+	public String generateOrderId(String userId) {
 		String orderId = "";
-		if(service.getOrderTableSize()==0) {
-			orderId = "ORD0";
-		}
-		else {
-			orderId = "ORD"+service.getOrderTableSize();
-		}
+		Random rand = new Random();
+		int selected = rand.nextInt(1000);
+		orderId = "ORD"+service.getOrderTableSize()+userId+selected;
 		return orderId;
 	}
 	
 	public String generateProductUIN() {
-		return "UIN"+service.getOrderProductMapTableSize();
+		Random rand = new Random();
+		int selected = rand.nextInt(1000);
+		return "UIN"+selected+service.getOrderProductMapTableSize();
 	}
 }
