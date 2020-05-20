@@ -13,24 +13,52 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerConfig {
 
 	@Bean
-	public Docket swaggerConfiguration() {
+	public Docket swaggerConfigurationCart() {
 		
 		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("Cart")
 				.select()
 				.paths(PathSelectors.ant("/cart/*"))
-				.paths(PathSelectors.ant("/order/*"))
-				.apis(RequestHandlerSelectors.basePackage("com.cg.iter"))
+				.apis(RequestHandlerSelectors.basePackage("com.cg.iter.greatoutdooraddtocart"))
 				.build()
-				.apiInfo(apiDetails());
+				.apiInfo(cartDetails());
 	}
+	
+	@Bean
+	public Docket swaggerConfigurationOrder() {
+		
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("Order")
+				.select()
+				.paths(PathSelectors.ant("/order/*"))
+				.apis(RequestHandlerSelectors.basePackage("com.cg.iter.greatoutdooraddtocart"))
+				.build()
+				.apiInfo(orderDetails());
+	}
+	
 	
 
 	@SuppressWarnings("deprecation")
-	private ApiInfo apiDetails() {
+	private ApiInfo cartDetails() {
 		return new ApiInfo(
 				
 				"Add To Cart Service API", 
-				"Add to cart, delete and edit products into cart , Place an order", 
+				"Add to cart, delete and edit products into cart.", 
+				"1.0", 
+				"Free to use", 
+				"Iter", 
+				"", 
+				"iter.com"
+				
+				);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private ApiInfo orderDetails() {
+		return new ApiInfo(
+				
+				"Add To Cart Service API", 
+				"Place an order, view orders, remove orders", 
 				"1.0", 
 				"Free to use", 
 				"Iter", 
