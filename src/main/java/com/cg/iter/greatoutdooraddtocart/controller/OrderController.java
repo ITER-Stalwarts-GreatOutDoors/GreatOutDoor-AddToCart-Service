@@ -41,7 +41,7 @@ public class OrderController {
 	@PostMapping("/addItemToCart")
 	public String addItemToCart(@RequestBody ResponseCartDTO cartDTO) {
 		
-		if(cartDTO==null || cartDTO.getProductId()==null || cartDTO.getQuantity()==0 || cartDTO.getUserId()==null) { 
+		if(cartDTO==null || cartDTO.getProductId()==null || cartDTO.getQuantity()==0 ) { 
 			logger.error("Null request, cart details not provided at /addItemToCart");
 			throw new NullParameterException("Null request, please provide cart details!");
 		}

@@ -54,6 +54,12 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	private String scriptException = "Not well-formed script or error SQL command exception!";
 	private String transientDataAccessException = "database timeout! exception!";
 	
+	
+	
+	/*
+	 * name - add to cart
+	 * description - It will add an item to the cart.
+	 */
 	@Override
 	public boolean addItemToCart(ResponseCartDTO cart) {
 		
@@ -79,6 +85,11 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return true;
 	}
 
+	
+	/*
+	 * name - insert order-product map entity
+	 * description - register an item against a particular order
+	 */
 	@Override
 	public boolean insertOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) {
 		
@@ -104,6 +115,12 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return true;
 	}
 
+	
+	
+	/*
+	 * name - remove item from the cart
+	 * description - it will remove available item from the cart
+	 */
 	@Override
 	public boolean removeItemFromCart(ResponseCartDTO cart) {
 		
@@ -131,6 +148,13 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return true ;
 	}
 
+	
+	
+	
+	/*
+	 * name - updateItemQuantity
+	 * description - update the amount of existing product
+	 */
 	@Override
 	public boolean updateItemQuantity(CartDTO cartItem){
 		
@@ -162,6 +186,13 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return true;
 	}
 
+	
+	
+	
+	/*
+	 * name - registerOrder
+	 * description - register a new order
+	 */
 	@Override
 	public boolean registerOrder(OrderDTO order){
 		
@@ -215,18 +246,38 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return true;
 	}
 
+	
+	
+	
+	/*
+	 * name - delete order-product map entity
+	 * description - delete an item against a particular order
+	 */
 	@Override
 	public boolean deleteOrderProductMapEntity(OrderProductMapDTO orderProductMapEntity) {
 		orderProductMapRepository.deleteOrders(orderProductMapEntity.getOrderId(), orderProductMapEntity.getProductId());
 		return true;
 	}
 
+	
+	
+	/*
+	 * name-deleteOrder
+	 * description:delete the order
+	 */
 	@Override
 	public boolean deleteOrder(OrderDTO order) {
 		orderRepository.delete(order);
 		return true;
 	}
 
+	
+	
+	
+	/*
+     * name-cancelOrder
+     * description: Cancel a order that is placed
+     */
 	@Override
 	public void cancelOrder(String orderId) {
 		orderProductMapRepository.deleteOrderByOrderId(orderId);
@@ -234,6 +285,13 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 
+	
+	
+	
+	/*
+	 * name-getAllOrdersWithOrderId
+	 * description:Accesing all the orders with a given order id
+	 */
 	@Override
 	public Orders getAllOrdersWithOrderId(String orderId) {
 		Orders orders = new Orders();
@@ -246,6 +304,14 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 
+	
+	
+	
+	
+	/*
+	 * name:getAllOrderWithOrderIdProductId
+	 * description:Accesing all the orders with a given orderId and productId
+	 */
 	@Override
 	public Orders getAllOrdersWithOrderIdProductId(String orderId, String productId) {
 		Orders orders = new Orders();
@@ -257,6 +323,14 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return orders;
 	}
 
+	
+	
+	
+	
+	/*
+     * name-cancelProduct
+     * description:cancel a product of particular order that is placed
+     */
 	@Override
 	public void cancelProduct(String orderId, String productId) {
 		orderProductMapRepository.deleteOrders(orderId, productId);
@@ -273,6 +347,11 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 	
+	
+	/*
+     * getProductsFromCart
+     * description:retailer can get all products in the cart
+     */
 	@HystrixCommand(fallbackMethod = "getFallbackProducts",
 			commandProperties = {
 					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
@@ -299,6 +378,11 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return listProducts;
 	}
 
+	
+	/*
+     * removeItemFromCart
+     * description:retailer can remove a product in the cart
+     */
 	@Override
 	public void removeItemFromCart(String userId, String productId) {
 		cartRepository.removeItemFromCart(userId, productId);
@@ -306,7 +390,10 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	}
 
 	
-	//fallback method
+	/*
+     * getFallbackProducts
+     * description:fallback method for get products from cart.
+     */
 	public List<ProductDTO>getFallbackProducts(){
 		return Arrays.asList(
 				new ProductDTO("fallback productId", 

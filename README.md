@@ -30,6 +30,13 @@ You can change this properties in resource/application.properties
 * Application name - add-to-cart-service
 * Database - for devlopment [H2](https://www.h2database.com/) and for production [Oracle](https://www.oracle.com/). 
 
+### Tools implemented 
+* [Netflix Hystrix fault tolerance](https://spring.io/guides/gs/circuit-breaker/)
+* [Swagger](https://swagger.io/)
+* [Netflix Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html)
+* [Netflix Zuul gateway](https://cloud.spring.io/spring-cloud-netflix/multi/multi__router_and_filter_zuul.html)
+* [Netflix Eureka server](https://cloud.spring.io/spring-cloud-netflix/reference/html/)
+
 ## Getting Started
 
 For help getting started with Spring, view online

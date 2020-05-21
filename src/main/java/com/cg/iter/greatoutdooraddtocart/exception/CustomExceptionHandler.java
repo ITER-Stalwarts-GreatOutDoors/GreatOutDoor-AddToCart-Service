@@ -45,6 +45,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
 				new HttpHeaders(),HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(CrudException.class)
+	public final ResponseEntity<ErrorMessage> crudException(CrudException ex){
+
+		ErrorMessage exceptionResponse =
+				new ErrorMessage(ex.getMessage(), 
+						errorMsg,currentTimeMillis);
+		return new ResponseEntity<ErrorMessage>(exceptionResponse,
+				new HttpHeaders(),HttpStatus.NOT_FOUND);
+	}
+	
 	
 }
 
