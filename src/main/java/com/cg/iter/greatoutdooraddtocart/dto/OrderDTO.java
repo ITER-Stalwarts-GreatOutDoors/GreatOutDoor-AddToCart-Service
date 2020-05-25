@@ -25,11 +25,12 @@ public class OrderDTO {
 	private Date orderInitiateTime;
 	@Column(name = "order_dispatch_time")
 	private Date orderDispatchTime;
+	private double totalcost;
 	
 	public OrderDTO() {}
 
 	public OrderDTO(String orderId, String userId, String addressId, byte orderDispatchStatus, Date orderInitiateTime,
-			Date orderDispatchTime) {
+			Date orderDispatchTime , double totalcost) {
 		super();
 		this.orderId = orderId;
 		this.userId = userId;
@@ -37,6 +38,7 @@ public class OrderDTO {
 		this.orderDispatchStatus = orderDispatchStatus;
 		this.orderInitiateTime = orderInitiateTime;
 		this.orderDispatchTime = orderDispatchTime;
+		this.totalcost=totalcost;
 	}
 
 	public String getOrderId() {
@@ -86,6 +88,15 @@ public class OrderDTO {
 	public void setOrderDispatchTime(Date orderDispatchTime) {
 		this.orderDispatchTime = orderDispatchTime;
 	}
+
+	public double getTotalcost() {
+		return totalcost;
+	}
+
+	public void setTotalcost(double totalcost) {
+		this.totalcost = totalcost;
+	}
+	
 	
 	
 	

@@ -3,8 +3,13 @@ package com.cg.iter.greatoutdooraddtocart.controller;
 
 
 
+
+
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.cg.iter.greatoutdooraddtocart.beans.Orders;
+import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.exception.NullParameterException;
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/order")
 public class OrderProductCancelController {
 
@@ -88,6 +95,22 @@ public class OrderProductCancelController {
 		}
 		orderAndCartService.cancelProduct(orderId , productId);
 		return "successfully removed";
+	}
+	
+	
+	@ApiOperation(
+			value = "Get all orders with userId",
+			notes = "Client can get all placed order list with this API",
+			response = List.class
+			)
+	@GetMapping("/getOrders")
+	public List<OrderDTO> getAllOrders(@RequestParam String userId){
+		
+		if(userId==null) {
+			logger.error("Null request, userId not provided for /getOrders");
+			throw new NullParameterException("Null request, please provide orderId!");
+		}
+		return orderAndCartService.getAllOrders(userId);
 	}
 	
 	

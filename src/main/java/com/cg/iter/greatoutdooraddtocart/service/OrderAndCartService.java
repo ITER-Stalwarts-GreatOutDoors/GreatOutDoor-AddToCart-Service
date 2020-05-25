@@ -121,4 +121,18 @@ public interface OrderAndCartService {
      * description:retailer can remove a product in the cart
      */
 	void removeItemFromCart(String userId, String productId);
+
+
+	/*
+     * getAllOrders
+     * description:retailer can get all placed orders
+     */
+	List<OrderDTO> getAllOrders(String userId);
+
+
+	/*
+     * getOrderProducts
+     * description:retailer can get all products in an order
+     */
+	List<ProductDTO> getOrderProducts(String orderId);
 }

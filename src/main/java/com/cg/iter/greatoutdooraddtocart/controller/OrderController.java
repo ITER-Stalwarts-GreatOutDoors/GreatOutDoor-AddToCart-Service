@@ -41,7 +41,7 @@ public class OrderController {
 	@PostMapping("/addItemToCart")
 	public String addItemToCart(@RequestBody ResponseCartDTO cartDTO) {
 		
-		if(cartDTO==null || cartDTO.getProductId()==null || cartDTO.getQuantity()==0 ) { 
+		if(cartDTO==null || cartDTO.getProductId().trim().length() == 0 || cartDTO.getQuantity()==0 ) { 
 			logger.error("Null request, cart details not provided at /addItemToCart");
 			throw new NullParameterException("Null request, please provide cart details!");
 		}
@@ -62,7 +62,7 @@ public class OrderController {
 			response = String.class
 			)
 	@PostMapping("/placeOrder")
-	public String placeOrder(@RequestParam String userId, @RequestParam String addressId) {
+	public String placeOrder(@RequestParam String userId, @RequestParam String addressId , @RequestParam double totalCost) {
 		
 		if(userId==null || addressId==null) {
 			logger.error("Null request, userId or addressId not provided at /placeOrder");
@@ -73,6 +73,7 @@ public class OrderController {
 		OrderDTO order = new OrderDTO();
 		order.setAddressId(addressId);
 		order.setUserId(userId);
+		order.setTotalcost(totalCost);
 		orderAndCartService.registerOrder(order);
 
 
@@ -135,6 +136,20 @@ public class OrderController {
 	List<ProductDTO> viewCart(){
 		return orderAndCartService.getProductsFromCart();
 	}
+	
+	
+	
+	@ApiOperation(
+			value = "View order products",
+			notes = "Retailer can view all products in a perticular order with orderId with this API",
+			response = List.class
+			)
+	@GetMapping("/viewOrderProducts")
+	List<ProductDTO> viewOrderProducts(@RequestParam String orderId){
+		return orderAndCartService.getOrderProducts(orderId);
+	}
+	
+	
 	
 	
 

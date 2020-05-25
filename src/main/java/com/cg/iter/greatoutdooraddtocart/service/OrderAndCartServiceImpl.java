@@ -208,7 +208,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		while (itr.hasNext()) {
 			
 			OrderProductMapDTO orderProductMap = new OrderProductMapDTO(generate.generateProductUIN(),
-			orderId, cartItems.get(index).getProductId(), 1, 0);
+			orderId, cartItems.get(index).getProductId(), 1, 0 ,cartItems.get(index).getQuantity());
 			insertOrderProductMapEntity(orderProductMap);
 			index++;
 			itr.next();
@@ -222,12 +222,13 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		Date orderInitiationTime = new Date(millis);
 		
 		OrderDTO newOrder = new OrderDTO(orderId,order.getUserId()
-				,order.getAddressId(),(byte) 0,orderInitiationTime,null );
+				,order.getAddressId(),(byte) 0,orderInitiationTime,null,order.getTotalcost());
 		
 		
 		try {
 			
 			orderRepository.save(newOrder);
+			cartRepository.deleteAll();
 			
 		} catch (RecoverableDataAccessException  e) {
 			
@@ -389,12 +390,73 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		
 	}
 
+
+
+	/*
+     * getAllOrders
+     * description:retailer can get all placed orders
+     */
+	@Override
+	public List<OrderDTO> getAllOrders(String userId) {
+		return orderRepository.getAllOrders(userId);
+	}
+
+
+	
+	
+	/*
+     * getProductsFromCart
+     * description:retailer can get all products in an order
+     */
+	@HystrixCommand(fallbackMethod = "getFallbackOrderProducts",
+			commandProperties = {
+					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+			})
+	@Override
+	public List<ProductDTO> getOrderProducts(String orderId) {
+		List<OrderProductMapDTO> orderProductMap = orderProductMapRepository.getAllOrdersById(orderId);
+		List<ProductDTO> listProducts = new ArrayList<>();
+		
+		Iterator<OrderProductMapDTO> itr = orderProductMap.iterator();
+		int index = 0;
+		while (itr.hasNext()) {
+			ProductDTO product = restTemplate.getForObject(productURL+"/getProductById?productId="+orderProductMap.get(index).getProductId(),
+					ProductDTO.class);
+			product.setQuantity(orderProductMap.get(index).getQuantity());
+			listProducts.add(product);
+			index++;
+			itr.next();
+		}
+		return listProducts;
+
+	}
+	
+	
+	
+	
+
 	
 	/*
      * getFallbackProducts
      * description:fallback method for get products from cart.
      */
 	public List<ProductDTO>getFallbackProducts(){
+		return Arrays.asList(
+				new ProductDTO("fallback productId", 
+						00,"fallback colour","fallback dimension", "fallback specification","fallback manufacture", 0,0 ,"fallback productName", "fallback.com/fallback.jpg")
+				
+				);
+	}
+	
+	
+	/*
+     * getFallbackProducts
+     * description:fallback method for get products from order.
+     */
+	public List<ProductDTO>getFallbackOrderProducts(String orderId){
 		return Arrays.asList(
 				new ProductDTO("fallback productId", 
 						00,"fallback colour","fallback dimension", "fallback specification","fallback manufacture", 0,0 ,"fallback productName", "fallback.com/fallback.jpg")

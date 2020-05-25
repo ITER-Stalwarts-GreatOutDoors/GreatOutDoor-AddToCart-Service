@@ -24,16 +24,19 @@ public class OrderProductMapDTO {
 
 	@Column(name = "gift_status")
 	private int giftStatus;
+	
+	private int quantity;
 
 	public OrderProductMapDTO() {}
 
-	public OrderProductMapDTO(String productUIN, String orderId, String productId, int productStatus, int giftStatus) {
+	public OrderProductMapDTO(String productUIN, String orderId, String productId, int productStatus, int giftStatus , int quantity) {
 		super();
 		this.productUIN = productUIN;
 		this.orderId = orderId;
 		this.productId = productId;
 		this.productStatus = productStatus;
 		this.giftStatus = giftStatus;
+		this.quantity = quantity;
 	}
 
 	public String getProductUIN() {
@@ -74,6 +77,14 @@ public class OrderProductMapDTO {
 
 	public void setGiftStatus(int giftStatus) {
 		this.giftStatus = giftStatus;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 	
 	
