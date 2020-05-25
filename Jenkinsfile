@@ -11,6 +11,8 @@ pipeline {
 				bat 'mvn clean compile'	
 			}	
 		}
+
+
 	
 		stage ('Sonarqube deployment Stage'){
 			steps{
