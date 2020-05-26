@@ -158,13 +158,13 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	@Override
 	public boolean updateItemQuantity(CartDTO cartItem){
 		
-		Optional<CartDTO> checkItem = cartRepository.findById(cartItem.getUserId());
+		
 		
 		
 		try {
 			
-			if(checkItem.isEmpty()) throw new Exception();
-			cartRepository.save(cartItem);
+			
+			cartRepository.updateItemInCart(cartItem.getUserId(), cartItem.getProductId(), cartItem.getQuantity());
 			
 		} catch (RecoverableDataAccessException  e) {
 			

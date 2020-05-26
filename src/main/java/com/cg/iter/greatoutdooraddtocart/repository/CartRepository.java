@@ -14,4 +14,9 @@ public interface CartRepository extends CrudRepository<CartDTO, String>{
 	@Query("DELETE FROM CartDTO opm WHERE opm.userId=:userId and opm.productId=:productId")
 	@Transactional
 	void removeItemFromCart(@Param("userId") String userId, @Param("productId") String productId);
+	
+	@Modifying
+	@Query("UPDATE CartDTO opm SET opm.quantity=:quantity WHERE opm.userId=:userId and opm.productId=:productId")
+	@Transactional
+	void updateItemInCart(@Param("userId") String userId, @Param("productId") String productId , @Param("quantity") int quantity);
 }

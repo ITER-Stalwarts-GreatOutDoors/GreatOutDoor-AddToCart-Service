@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
+import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.OrderDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.ProductDTO;
+import com.cg.iter.greatoutdooraddtocart.exception.CrudException;
 import com.cg.iter.greatoutdooraddtocart.exception.NullParameterException;
 import com.cg.iter.greatoutdooraddtocart.service.OrderAndCartService;
 
@@ -147,6 +149,18 @@ public class OrderController {
 	@GetMapping("/viewOrderProducts")
 	List<ProductDTO> viewOrderProducts(@RequestParam String orderId){
 		return orderAndCartService.getOrderProducts(orderId);
+	}
+	
+	
+	
+	@PostMapping("/updateQuantity")
+	String updateQuantity(@RequestBody CartDTO cartItem) {
+		if(orderAndCartService.updateItemQuantity(cartItem)) {
+			return "successfully changed";
+		}
+		else {
+			throw new CrudException("fail to change the quantity");
+		}
 	}
 	
 	
