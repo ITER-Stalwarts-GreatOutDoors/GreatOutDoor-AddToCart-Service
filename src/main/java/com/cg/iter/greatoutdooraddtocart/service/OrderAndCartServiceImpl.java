@@ -16,6 +16,7 @@ import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.cg.iter.greatoutdooraddtocart.beans.InvoiceResponse;
 import com.cg.iter.greatoutdooraddtocart.beans.Orders;
 import com.cg.iter.greatoutdooraddtocart.beans.ResponseCartDTO;
 import com.cg.iter.greatoutdooraddtocart.dto.CartDTO;
@@ -50,6 +51,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 	RestTemplate restTemplate;
 	
 	private String productURL = "http://product-ms/product";
+	private String invoiceURL = "http://notification-service/invoice";
 	private String dataAccessException = "distributed transaction exception!";
 	private String scriptException = "Not well-formed script or error SQL command exception!";
 	private String transientDataAccessException = "database timeout! exception!";
@@ -227,6 +229,8 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		
 		try {
 			
+			
+			sendMail(newOrder);
 			orderRepository.save(newOrder);
 			cartRepository.deleteAll();
 			
@@ -249,7 +253,16 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 
 	
 	
-	
+
+
+	private void sendMail(OrderDTO order) {
+		Orders orderList = getAllOrdersWithOrderId(order.getOrderId());
+		InvoiceResponse invoice = new InvoiceResponse(orderList.getOrders(), order.getAddressId(), order.getOrderInitiateTime(), order.getTotalcost(), order.getUserId());
+		restTemplate.postForObject(invoiceURL+"//generateInvoice", invoice, String.class);
+		return;
+	}
+
+
 	/*
 	 * name - delete order-product map entity
 	 * description - delete an item against a particular order
@@ -272,7 +285,6 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
 		return true;
 	}
 
-	
 	
 	
 	/*
@@ -361,8 +373,8 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
 			})
 	@Override
-	public List<ProductDTO> getProductsFromCart() {
-		List<CartDTO> listCartItems = (List<CartDTO>) cartRepository.findAll();
+	public List<ProductDTO> getProductsFromCart(String userId) {
+		List<CartDTO> listCartItems = cartRepository.getAllProducts(userId);
 		List<ProductDTO> listProducts = new ArrayList<>();
 		
 		Iterator<CartDTO> itr = listCartItems.iterator();
@@ -443,7 +455,7 @@ public class OrderAndCartServiceImpl implements OrderAndCartService{
      * getFallbackProducts
      * description:fallback method for get products from cart.
      */
-	public List<ProductDTO>getFallbackProducts(){
+	public List<ProductDTO>getFallbackProducts(String userId){
 		return Arrays.asList(
 				new ProductDTO("fallback productId", 
 						00,"fallback colour","fallback dimension", "fallback specification","fallback manufacture", 0,0 ,"fallback productName", "fallback.com/fallback.jpg")

@@ -135,8 +135,8 @@ public class OrderController {
 			response = List.class
 			)
 	@GetMapping("/viewProductsFromCart")
-	List<ProductDTO> viewCart(){
-		return orderAndCartService.getProductsFromCart();
+	List<ProductDTO> viewCart(@RequestParam String userId){
+		return orderAndCartService.getProductsFromCart(userId);
 	}
 	
 	
@@ -153,6 +153,11 @@ public class OrderController {
 	
 	
 	
+	@ApiOperation(
+			value = "Update quantity",
+			notes = "Retailer can ppdate quantity of items in the cart with this API",
+			response = String.class
+			)
 	@PostMapping("/updateQuantity")
 	String updateQuantity(@RequestBody CartDTO cartItem) {
 		if(orderAndCartService.updateItemQuantity(cartItem)) {

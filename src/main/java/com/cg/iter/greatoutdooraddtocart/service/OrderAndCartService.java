@@ -113,7 +113,7 @@ public interface OrderAndCartService {
      * getProductsFromCart
      * description:retailer can get all products in the cart
      */
-	List<ProductDTO> getProductsFromCart();
+	List<ProductDTO> getProductsFromCart(String userId);
 
 
 	/*
